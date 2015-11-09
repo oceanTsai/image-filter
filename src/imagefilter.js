@@ -70,9 +70,9 @@
                     data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);
                     data[i + 2] = (r * 0.393) + (g * 0.769) + (b * 0.189);
                     */
-
+                    //TODO: 之後將參數調整成 api 參數
                     data[i] = ((r * 0.272) + (g * 0.534) + (b * 0.131)) / 1.5   | 0;
-                    data[i + 1] = ((r * 0.349) + (g * 0.686) + (b * 0.168))/1.5 |0;
+                    data[i + 1] = ((r * 0.349) + (g * 0.686) + (b * 0.168))/1.5 | 0;
                     data[i + 2] = ((r * 0.393) + (g * 0.769) + (b * 0.189))/1.5 | 0;
                     /*
                     data[i] = ((r * 0.272) + (g * 0.534) + (b * 0.131)) / 2;
@@ -83,7 +83,6 @@
 	        context.putImageData(imgData, 0, 0);
 	        var dataURL = canvas.toDataURL("image/"+picType);
 	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-
 		}
 
 		//-- public scope --
