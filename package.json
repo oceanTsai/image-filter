@@ -1,0 +1,22 @@
+{
+  "name": "image-filter",
+  "version": "1.0.0",
+  "description": "image filter", 
+  "keywords": [
+    "image filter",
+    "filter",
+    "image"
+  ],
+  "author": "ocean",
+  "repository": {
+    "type": "git",
+    "url":"git@github.com:oceanTsai/image-filter.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "main": "src/imagefilter.js"
+}

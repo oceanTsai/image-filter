@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<title>image filter</title>
+	<meta name="author" content="ocean">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+</head>
+<body>
+	<img id="sourceImg">
+	<img id="outImg">
+</body>
+<script src="./node_modules/jquery/dist/jquery.min.js"></script>
+<script src="./src/imagefilter.js"></script>
+<script>
+	var sourceImg = document.getElementById('sourceImg');
+	var loadHandler = function(e){	
+		console.log(ImageFilter.negativeBase64(sourceImg));
+		
+		
+	};
+	sourceImg.addEventListener('load' ,loadHandler , false);
+	var time = new Date().getTime();
+        sourceImg.src = "./resources/avatar.png?"+time;
+    //var outImg = document.getElementById('outImg');
+
+</script>
+</html>
