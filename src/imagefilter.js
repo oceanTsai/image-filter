@@ -27,6 +27,7 @@
 	//  
 	//-------------------------- 
 	var ImageFilter = (function(window, document){
+		MOSAIC_TYPE = { CIRCEL : 'circel',  RECTANGLE :'rectangle'};
 		//-- private scope --
 		var negative = function(image, picType){
 			var canvas = document.createElement("canvas");
@@ -83,12 +84,101 @@
 	        context.putImageData(imgData, 0, 0);
 	        var dataURL = canvas.toDataURL("image/"+picType);
 	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-		}
+		};
+
+		
+		var circelMosaic = function(image, picType){
+			var canvas = document.createElement("canvas");
+			    canvas.width = image.width;
+			    canvas.height = image.height;
+			var context = canvas.getContext("2d");
+	        //context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
+	        context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);  
+	        var imageData = context.getImageData(0, 0, canvas.width, canvas.height); 
+	        var pixels = imageData.data; 
+	        context.clearRect(0, 0, canvas.width, canvas.height); 
+	        var numTileRows = 20; 
+	        var numTileCols = 20; 
+	        var tileWidth = imageData.width/numTileCols; 
+	        var tileHeight = imageData.height/numTileRows; 
+	        for (var r = 0; r < numTileRows; r++) { 
+	                for (var c = 0; c < numTileCols; c++) { 
+	                     var x = (c*tileWidth)+(tileWidth/2); 
+	                     var y = (r*tileHeight)+(tileHeight/2);                     
+	                     var pos = (Math.floor(y)*(imageData.width*4))+(Math.floor(x)*4); 
+	                     var red = pixels[pos]; 
+	                     var green = pixels[pos+1]; 
+	                     var blue = pixels[pos+2]; 
+	                    context.fillStyle = "rgb("+red+", "+green+", "+blue+")"; 
+	                    //繪製方式換成圓
+	                    context.beginPath(); 
+	                    context.arc(x, y, tileWidth/2, 0, Math.PI*2, false); 
+	                    context.closePath(); 
+	                    context.fill(); 
+	                }; 
+			};
+			var dataURL = canvas.toDataURL("image/"+picType);
+	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+		};
+
+		var rectangleMosaic = function(image, picType){
+			var canvas = document.createElement("canvas");
+			    canvas.width = image.width;
+			    canvas.height = image.height;
+			var context = canvas.getContext("2d");
+	        //context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh)
+	        context.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);  
+	        var imageData = context.getImageData(0, 0, canvas.width, canvas.height); 
+	        var pixels = imageData.data; 
+
+	        context.clearRect(0, 0, canvas.width, canvas.height); 
+	        
+	        //馬賽克磚塊數量
+	        var numTileRows = 50; 
+	        var numTileCols = 50; 
+
+	        //每一塊馬賽克磚的長寬
+	        var tileWidth = imageData.width/numTileCols; 
+	        var tileHeight = imageData.height/numTileRows; 
+	        //馬賽克主要演算邏輯
+	        for (var r = 0; r < numTileRows; r++) { 
+	                for (var c = 0; c < numTileCols; c++) { 
+	                    //顏色取樣點,該取樣點的周圍九宮格,將會與此點設成同色
+	                    var x = (c*tileWidth)+(tileWidth/2); 
+	                    var y = (r*tileHeight)+(tileHeight/2);                     
+	                    var pos = (Math.floor(y)*(imageData.width*4))+(Math.floor(x)*4); 
+	                     
+	                    //取得顏色
+	                    var red = pixels[pos]; 
+	                    var green = pixels[pos+1]; 
+	                    var blue = pixels[pos+2]; 
+	                     //重新填滿色塊
+	                    context.fillStyle = "rgb("+red+", "+green+", "+blue+")"; 
+	                    context.fillRect(x-(tileWidth/2), y-(tileHeight/2), tileWidth, tileHeight); 
+	                }; 
+	        }; 
+	        var dataURL = canvas.toDataURL("image/"+picType);
+	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+		};
+
+		var mosaic = function(image, picType, mosaitType){
+			switch(mosaitType){
+				case MOSAIC_TYPE.CIRCEL : 
+					return circelMosaic(image, picType);
+					break;
+				case MOSAIC_TYPE.RECTANGLE:
+					return rectangleMosaic(image, picType);
+					break;
+			}
+			
+		};
 
 		//-- public scope --
 		return module = {
+			MOSAIC_TYPE : MOSAIC_TYPE,
 			negativeBase64 : negative,
-			grayBase64 : gray
+			grayBase64 : gray,
+			mosaicBase64 : mosaic
 		};
 	})(window, document);
 		
