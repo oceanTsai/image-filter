@@ -21,14 +21,14 @@
 	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 	SOFTWARE. 
  */
-(function(window, document, $){
+(function(window, document){
 	
 	//--------------------------
 	//  
 	//-------------------------- 
-	var ImageFilter = (function(window, document, $){
+	var ImageFilter = (function(window, document){
 		//-- private scope --
-		var negative = function(image){
+		var negative = function(image, type){
 			var canvas = document.createElement("canvas");
 			    canvas.width = image.width;
 			    canvas.height = image.height;
@@ -45,7 +45,7 @@
 	                    imgData.data[i+2] = 255 - imgData.data[i+2]; //B                 
 	        }
 	        context.putImageData(imgData, 0, 0);
-	        var dataURL = canvas.toDataURL("image/png");
+	        var dataURL = canvas.toDataURL("image/"+type);
 	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 		};
 
@@ -53,7 +53,7 @@
 		return module = {
 			negativeBase64 : negative
 		};
-	})(window, document, $);
+	})(window, document);
 		
 			
 	if(!window.ImageFilter){		
@@ -63,4 +63,4 @@
 	if(typeof(module)!= "undefined"){
 		module.exports = ImageFilter;
 	}
-}).call(this, window, document, $);
+}).call(this, window, document);

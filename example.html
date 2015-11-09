@@ -11,19 +11,16 @@
 	<img id="sourceImg">
 	<img id="outImg">
 </body>
-<script src="./node_modules/jquery/dist/jquery.min.js"></script>
 <script src="./src/imagefilter.js"></script>
 <script>
 	var sourceImg = document.getElementById('sourceImg');
+	var outImg = document.getElementById('outImg');
 	var loadHandler = function(e){	
-		console.log(ImageFilter.negativeBase64(sourceImg));
-		
-		
+		outImg.setAttribute('src', 'data:image/png;base64,'+ImageFilter.negativeBase64(sourceImg, 'png'));
 	};
 	sourceImg.addEventListener('load' ,loadHandler , false);
-	var time = new Date().getTime();
-        sourceImg.src = "./resources/avatar.png?"+time;
-    //var outImg = document.getElementById('outImg');
+    sourceImg.src = "./resources/avatar.png?"+ new Date().getTime();
+    
 
 </script>
 </html>
