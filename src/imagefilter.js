@@ -28,7 +28,7 @@
 	//-------------------------- 
 	var ImageFilter = (function(window, document){
 		//-- private scope --
-		var negative = function(image, type){
+		var negative = function(image, picType){
 			var canvas = document.createElement("canvas");
 			    canvas.width = image.width;
 			    canvas.height = image.height;
@@ -45,13 +45,51 @@
 	                    imgData.data[i+2] = 255 - imgData.data[i+2]; //B                 
 	        }
 	        context.putImageData(imgData, 0, 0);
-	        var dataURL = canvas.toDataURL("image/"+type);
+	        var dataURL = canvas.toDataURL("image/"+picType);
 	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
 		};
 
+		var gray = function(image, picType){
+			var canvas = document.createElement("canvas");
+			    canvas.width = image.width;
+			    canvas.height = image.height;
+			//clone image
+			var context = canvas.getContext("2d");
+				context.drawImage(image, 0, 0);
+			//get image binrary data
+			var imgData = context.getImageData(0, 0, canvas.width, canvas.height);
+        	var data = imgData.data;
+	        //主要公式
+	         for (var i=0, dataSize=imgData.data.length; i < dataSize ; i=i+4) {
+                    var r = data[i] ;
+                    var g = data[i + 1];
+                    var b = data[i + 2];
+                    //灰階主要計算公式
+                    /*
+                    data[i] = (r * 0.272) + (g * 0.534) + (b * 0.131);
+                    data[i + 1] = (r * 0.349) + (g * 0.686) + (b * 0.168);
+                    data[i + 2] = (r * 0.393) + (g * 0.769) + (b * 0.189);
+                    */
+
+                    data[i] = ((r * 0.272) + (g * 0.534) + (b * 0.131)) / 1.5   | 0;
+                    data[i + 1] = ((r * 0.349) + (g * 0.686) + (b * 0.168))/1.5 |0;
+                    data[i + 2] = ((r * 0.393) + (g * 0.769) + (b * 0.189))/1.5 | 0;
+                    /*
+                    data[i] = ((r * 0.272) + (g * 0.534) + (b * 0.131)) / 2;
+                    data[i + 1] = ((r * 0.349) + (g * 0.686) + (b * 0.168))/2;
+                    data[i + 2] = ((r * 0.393) + (g * 0.769) + (b * 0.189))/2;
+                    */
+        	}
+	        context.putImageData(imgData, 0, 0);
+	        var dataURL = canvas.toDataURL("image/"+picType);
+	        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+
+		}
+
 		//-- public scope --
 		return module = {
-			negativeBase64 : negative
+			negativeBase64 : negative,
+			grayBase64 : gray
 		};
 	})(window, document);
 		
